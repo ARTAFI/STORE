@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f2">
+    <meta name="description" content="Découvrez les applications du Petit Store et connectez-vous pour retrouver celles qui vous sont réservées.">
+    <title>Le Petit Store — vos applications, au même endroit</title>
+    <link rel="icon" href="./logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+    <script src="./config.js"></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Le Petit Store, accueil">
+        <img src="./logo.svg" alt="" width="44" height="44">
+        <span class="brand-copy"><strong>Le Petit Store</strong><small>Votre espace applications</small></span>
+      </a>
+      <button id="login-open" class="profile-button" type="button" aria-label="Se connecter à mon compte" title="Se connecter">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.5-3.5 3.2-5.5 7-5.5s6.5 2 7 5.5"></path></svg>
+        <span>Se connecter</span>
+      </button>
+      <div id="account-area" class="account-area" hidden>
+        <span class="user-greeting" id="user-greeting"></span>
+        <button class="button button-quiet" id="sign-out" type="button">Se déconnecter</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="home-view" class="home-view">
+        <div class="home-hero">
+          <div class="home-hero-copy">
+            <p class="eyebrow"><span class="status-dot"></span> BIENVENUE AU PETIT STORE</p>
+            <h1>De belles applis,<br><em>à portée de main.</em></h1>
+            <p>Découvrez les applications que nous avons sélectionnées pour vous. Connectez-vous pour retrouver celles auxquelles vous avez accès.</p>
+            <button class="button button-primary home-login-button" type="button">Voir mes applications <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="home-hero-art" aria-hidden="true">
+            <div class="home-art-circle"></div><div class="home-art-card card-back">✦</div>
+            <div class="home-art-card card-front"><span>VOS APPLIS</span><i>✳</i><b>Tout au même endroit</b></div>
+            <span class="home-art-spark">✧</span>
+          </div>
+        </div>
+        <section class="discovery-section">
+          <div class="discovery-heading">
+            <div><p class="eyebrow">À DÉCOUVRIR</p><h2>Un aperçu de nos applications</h2><p class="muted">Connectez-vous pour voir les applis disponibles pour votre compte.</p></div>
+            <label class="search-box"><span aria-hidden="true">⌕</span><input id="public-search" type="search" placeholder="Rechercher une application…" aria-label="Rechercher une application"></label>
+          </div>
+          <div id="public-catalog" class="catalog-grid" aria-live="polite"></div>
+          <div id="public-empty" class="empty-state" hidden><div class="empty-icon" aria-hidden="true">✳</div><h3>De nouvelles applis arrivent bientôt</h3><p>Revenez nous voir prochainement pour découvrir les applications du Petit Store.</p></div>
+          <p class="discovery-note">Certaines applications sont réservées aux clients autorisés. <button class="text-button" type="button">Connectez-vous</button> pour consulter vos accès.</p>
+        </section>
+        <footer class="store-footer home-footer"><span>Fait avec soin pour vous <span class="heart">♥</span></span><a href="mailto:contact@exemple.fr">Une question ? Contactez-nous</a></footer>
+      </section>
+
+      <section id="login-view" class="login-layout" hidden>
+        <div class="welcome-panel">
+          <div class="eyebrow"><span class="status-dot"></span> VOTRE ESPACE PRIVÉ</div>
+          <h1>Vos applis préférées,<br><em>à portée de main.</em></h1>
+          <p>Connectez-vous pour retrouver les applications qui vous sont réservées.</p>
+          <div class="welcome-note">
+            <span class="note-icon" aria-hidden="true">✳</span>
+            <span><strong>Un accès personnel</strong><br>Découvrez le catalogue complet et téléchargez les applications achetées avec votre compte.</span>
+          </div>
+          <div class="decor decor-one"></div><div class="decor decor-two"></div>
+        </div>
+        <div class="login-side">
+          <form id="login-form" class="login-card">
+            <button id="login-close" class="login-close" type="button" aria-label="Retour à l’accueil">← Retour à l’accueil</button>
+            <div class="card-logo"><img src="./logo.svg" alt="" width="54" height="54"></div>
+            <p class="eyebrow">ESPACE CLIENT</p>
+            <h2>Ravi de vous revoir</h2>
+            <p class="muted">Connectez-vous avec les identifiants reçus lors de votre invitation.</p>
+            <label for="email">Adresse e-mail</label>
+            <input id="email" name="email" type="email" autocomplete="username" placeholder="vous@exemple.fr" required>
+            <label for="password">Mot de passe</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Votre mot de passe" required>
+            <p class="forgot-password"><button id="forgot-password" class="text-button" type="button">Mot de passe oublié ?</button></p>
+            <button class="button button-primary button-wide" type="submit">Me connecter <span aria-hidden="true">→</span></button>
+            <p id="login-message" class="form-message" role="status" aria-live="polite"></p>
+            <p class="login-help">Pas encore d’accès ? <a href="mailto:contact@exemple.fr">Demandez une invitation</a>.</p>
+          </form>
+          <p class="login-footnote">Un portail privé, pensé pour vous.</p>
+        </div>
+      </section>
+
+      <section id="store-view" class="store-view" hidden>
+        <section id="welcome-password" class="welcome-password" hidden>
+          <div class="welcome-password-card">
+            <img src="./logo.svg" alt="" width="54" height="54">
+            <p class="eyebrow">BIENVENUE DANS VOTRE ESPACE</p>
+            <h1>Choisissez votre mot de passe</h1>
+            <p class="muted">Définissez un mot de passe pour retrouver facilement vos applications lors de vos prochaines visites.</p>
+            <form id="password-form">
+              <label for="new-password">Nouveau mot de passe</label>
+              <input id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+              <button class="button button-primary button-wide" type="submit">Enregistrer mon mot de passe</button>
+              <p id="password-message" class="form-message" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+        <div id="store-content">
+        <div class="store-hero">
+          <div>
+            <p class="eyebrow"><span class="status-dot"></span> VOTRE ESPACE PRIVÉ</p>
+            <h1>Bonjour<span id="first-name"></span>,<br><em>on installe quoi aujourd’hui ?</em></h1>
+            <p>Découvrez toutes les applications du store. Téléchargez celles que vous avez achetées ; contactez-nous pour obtenir les autres.</p>
+          </div>
+          <div class="hero-art" aria-hidden="true"><div class="art-sun"></div><div class="art-phone"><span></span><i>✳</i><b>app</b></div><div class="art-spark spark-a">✦</div><div class="art-spark spark-b">✳</div></div>
+        </div>
+
+        <div class="catalog-toolbar">
+          <div><h2>Toutes les applications <span class="count-pill" id="app-count">0</span></h2><p class="muted">Vos achats sont disponibles au téléchargement. Les autres applications restent à découvrir.</p></div>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Rechercher une application…" aria-label="Rechercher une application"></label>
+        </div>
+        <div id="catalog" class="catalog-grid" aria-live="polite"></div>
+        <div id="empty-state" class="empty-state" hidden>
+          <div class="empty-icon" aria-hidden="true">✳</div>
+          <h3>Votre espace prend forme</h3>
+          <p>Aucune application n’est disponible pour le moment. Repassez bientôt ou contactez votre interlocuteur habituel.</p>
+        </div>
+
+        <section id="admin-panel" class="admin-panel" hidden>
+          <div class="invite-manager">
+            <div class="admin-heading"><div><p class="eyebrow">NOUVEAU CLIENT</p><h2>Inviter un utilisateur</h2><p class="muted">Un e-mail sécurisé lui permettra de créer son mot de passe.</p></div></div>
+            <form id="invite-form" class="invite-form">
+              <div class="form-field"><label for="invite-email">Adresse e-mail du client</label><input id="invite-email" name="email" type="email" autocomplete="off" placeholder="client@exemple.fr" required></div>
+              <button class="button button-primary" type="submit">Envoyer l’invitation <span aria-hidden="true">→</span></button>
+              <p id="invite-message" class="form-message form-full" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+          <div class="admin-heading"><div><p class="eyebrow">ESPACE ÉQUIPE</p><h2>Ajouter une application</h2><p class="muted">Choisissez ensuite les clients qui peuvent la télécharger.</p></div><span class="admin-badge">Administration</span></div>
+          <form id="app-form" class="app-form">
+            <div class="form-field"><label for="app-name">Nom de l’application</label><input id="app-name" name="name" maxlength="60" placeholder="Ex. Mon outil de suivi" required></div>
+            <div class="form-field"><label for="app-version">Version</label><input id="app-version" name="version" maxlength="20" placeholder="1.0.0" required></div>
+            <div class="form-field form-full"><label for="app-slug">Identifiant de connexion (facultatif)</label><input id="app-slug" name="slug" maxlength="40" autocomplete="off" autocapitalize="off" spellcheck="false" pattern="[a-z0-9][a-z0-9\-]{1,39}" placeholder="Ex. au-fil-du-mois"><small>Uniquement si l’application demande une connexion au démarrage : indiquez l’identifiant prévu dans son code. Minuscules, chiffres et tirets.</small></div>
+            <div class="form-field form-full" hidden><label for="app-platform">Type d’application</label><select id="app-platform" name="platform"><option value="android">Android — fichier APK</option></select></div>
+            <div class="form-field form-full"><label for="app-description">En quelques mots</label><textarea id="app-description" name="description" rows="3" maxlength="500" placeholder="À quoi sert cette application ?" required></textarea></div>
+            <div id="apk-field" class="form-field form-full"><label for="app-file">Fichier APK Android</label><input id="app-file" name="file" type="file" accept=".apk,application/vnd.android.package-archive" required><small>Seuls les fichiers APK signés sont acceptés (maximum 50 Mo avec l’offre gratuite Supabase).</small></div>
+            <div id="ios-link-field" class="form-field form-full" hidden><label for="app-install-url">Lien d’installation iPhone / iPad</label><input id="app-install-url" name="install_url" type="url" inputmode="url" placeholder="https://apps.apple.com/… ou https://testflight.apple.com/…"><small>Le client ouvrira ce lien pour installer l’application avec l’App Store ou TestFlight.</small></div>
+            <div class="form-full form-actions"><p id="admin-message" class="form-message" role="status" aria-live="polite"></p><button class="button button-primary" type="submit">Ajouter au catalogue <span aria-hidden="true">→</span></button></div>
+          </form>
+
+          <div class="apps-manager">
+            <div class="access-heading"><div><h3>Applications du catalogue</h3><p class="muted">Publiez, mettez à jour ou supprimez les applications existantes.</p></div></div>
+            <p id="apps-manager-message" class="form-message" role="status" aria-live="polite"></p>
+            <div id="admin-app-list" class="access-list"></div>
+          </div>
+
+          <div class="access-manager">
+            <div class="access-heading"><div><h3>Accès des clients</h3><p class="muted">Autorisez une adresse e-mail à voir et télécharger une application.</p></div></div>
+            <form id="access-form" class="access-form">
+              <div class="form-field"><label for="access-email">E-mail du client</label><input id="access-email" name="email" type="email" autocomplete="off" placeholder="client@exemple.fr" required></div>
+              <div class="form-field"><label for="access-app">Application</label><select id="access-app" name="app_id" required><option value="">Choisir une application…</option></select></div>
+              <div class="access-submit"><button class="button button-primary" type="submit">Donner l’accès</button></div>
+              <p id="access-message" class="form-message form-full" role="status" aria-live="polite"></p>
+            </form>
+            <div class="client-access-filter">
+              <label for="access-user-filter">Voir les applications d’un client</label>
+              <input id="access-user-filter" type="email" list="access-user-options" autocomplete="off" placeholder="Saisissez ou choisissez son adresse e-mail">
+              <datalist id="access-user-options"></datalist>
+            </div>
+            <h4 id="access-list-heading" class="access-list-heading" hidden></h4>
+            <div id="access-list" class="access-list"></div>
+          </div>
+
+          <div class="devices-manager">
+            <div class="access-heading"><div><h3>Appareils des clients</h3><p class="muted">Chaque client ne peut utiliser une application protégée que sur un nombre limité de téléphones. Un appareil « refusé » signale souvent des identifiants partagés. Retirez l’ancien appareil quand un client change de téléphone.</p></div></div>
+            <p id="devices-message" class="form-message" role="status" aria-live="polite"></p>
+            <div id="device-list" class="access-list"></div>
+          </div>
+        </section>
+        <footer class="store-footer"><span>Fait avec soin pour vous <span class="heart">♥</span></span><a href="mailto:contact@exemple.fr">Besoin d’aide ?</a></footer>
+        </div>
+      </section>
+    </main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
